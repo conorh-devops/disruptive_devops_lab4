@@ -24,6 +24,12 @@ jobs:
         dotnet build --configuration Release
         dotnet publish --configuration Release --output ${{github.workspace}}/publish
 
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: MyWebApp
+        path: ${{github.workspace}}/publish
+
     - name: Create Elastic Beanstalk environment
       uses: einaregilsson/beanstalk-deploy@v16
       with:
@@ -33,7 +39,7 @@ jobs:
         application_name: MyWebApp
         environment_name: production
         version_label: ${{ github.sha }}
-        wait_for_environment_to_be_ready: true
+        deployment_package: MyWebApp.zip
 
     - name: Deploy to AWS Elastic Beanstalk
       if: github.ref == 'refs/heads/main'
