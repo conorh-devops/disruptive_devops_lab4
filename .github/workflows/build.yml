@@ -34,7 +34,7 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         region: eu-west-1
         application_name: MyWebApp
-        environment_name: MyWebApp-production
+        environment_name: MyWebApp-env
         version_label: ${{ github.sha }}
         deployment_package: MyWebApp.zip
         wait_for_deployment: true
@@ -44,7 +44,7 @@ jobs:
 #      if: github.ref == 'refs/heads/main'
 #      env:
 #        APPLICATION_NAME: "MyWebApp"
-#        ENVIRONMENT_NAME: MyWebApp-production
+#        ENVIRONMENT_NAME: MyWebApp-env
 #        AWS_DEFAULT_REGION: "eu-west-1"
 #        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 #        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
