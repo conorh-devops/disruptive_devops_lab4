@@ -23,12 +23,6 @@ jobs:
         dotnet restore
         dotnet build --configuration Release
         dotnet publish --configuration Release --output ${{github.workspace}}/publish
-    
-    - name: Build and publish
-      run: |
-        dotnet restore
-        dotnet build --configuration Release
-        dotnet publish --configuration Release --output ${{github.workspace}}/publish
         cd ${{github.workspace}}/publish
         zip -r ../MyWebApp.zip *
       shell: bash
@@ -43,6 +37,7 @@ jobs:
         environment_name: production
         version_label: ${{ github.sha }}
         deployment_package: MyWebApp.zip
+        wait_for_deployment: true
 
     - name: Deploy to AWS Elastic Beanstalk
       if: github.ref == 'refs/heads/main'
