@@ -23,12 +23,15 @@ jobs:
         dotnet restore
         dotnet build --configuration Release
         dotnet publish --configuration Release --output ${{github.workspace}}/publish
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: MyWebApp
-        path: ${{github.workspace}}/publish
+    
+    - name: Build and publish
+      run: |
+        dotnet restore
+        dotnet build --configuration Release
+        dotnet publish --configuration Release --output ${{github.workspace}}/publish
+        cd ${{github.workspace}}/publish
+        zip -r ../MyWebApp.zip *
+      shell: bash
 
     - name: Create Elastic Beanstalk environment
       uses: einaregilsson/beanstalk-deploy@v16
