@@ -24,6 +24,17 @@ jobs:
         dotnet build --configuration Release
         dotnet publish --configuration Release --output ${{github.workspace}}/publish
 
+    - name: Create Elastic Beanstalk environment
+      uses: einaregilsson/beanstalk-deploy@v16
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: eu-west-1
+        application_name: MyWebApp
+        environment_name: production
+        version_label: ${{ github.sha }}
+        wait_for_environment_to_be_ready: true
+
     - name: Deploy to AWS Elastic Beanstalk
       if: github.ref == 'refs/heads/main'
       env:
