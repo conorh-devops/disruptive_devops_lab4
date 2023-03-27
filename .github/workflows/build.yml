@@ -1,15 +1,12 @@
-name: Build and Publish .NET Web Application
+name: Build and Deploy .NET Web Application
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build-and-publish:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,8 +23,15 @@ jobs:
         dotnet build --configuration Release
         dotnet publish --configuration Release --output ${{github.workspace}}/publish
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
+    - name: Deploy to AWS Elastic Beanstalk
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        name: MyWebApp
-        path: ${{github.workspace}}/publish
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1
+      env:
+        APPLICATION_NAME: "MyWebApp"
+        ENVIRONMENT_NAME: "production"
+      run: |
+        aws elasticbeanstalk create-application-version --application-name $APPLICATION_NAME --version-label $GITHUB_SHA --source-bundle S3Bucket="$APPLICATION_NAME-$ENVIRONMENT_NAME",S3Key="$GITHUB_SHA.zip"
+        aws elasticbeanstalk update-environment --environment-name $ENVIRONMENT_NAME --version-label $GITHUB_SHA
