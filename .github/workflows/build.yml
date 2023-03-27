@@ -35,7 +35,7 @@ jobs:
         region: eu-west-1
         application_name: MyWebApp
         environment_name: MyWebApp-env
-        version_label: ${GITHUB_SHA}
+        version_label: 1234567
         deployment_package: MyWebApp.zip
         wait_for_deployment: true
         use_existing_version_if_available: true
